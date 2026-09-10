@@ -1,0 +1,50 @@
+[
+ {
+  "form": "-า",
+  "sound": "aa",
+  "name": "sara aa",
+  "note": "le a long, comme dans « pâte »"
+ },
+ {
+  "form": "-ี",
+  "sound": "ii",
+  "name": "sara ii",
+  "note": "le i long"
+ },
+ {
+  "form": "-ู",
+  "sound": "uu",
+  "name": "sara uu",
+  "note": "le ou long"
+ },
+ {
+  "form": "-ือ",
+  "sound": "ʉʉ",
+  "name": "sara ʉʉ",
+  "note": "« ou » avec les lèvres étirées comme pour « i »"
+ },
+ {
+  "form": "-อ",
+  "sound": "ɔɔ",
+  "name": "sara ɔɔ",
+  "note": "le o très ouvert de « sort »"
+ },
+ {
+  "form": "เ-",
+  "sound": "ee",
+  "name": "sara ee",
+  "note": "le é long — s'écrit AVANT la consonne"
+ },
+ {
+  "form": "แ-",
+  "sound": "ɛɛ",
+  "name": "sara ɛɛ",
+  "note": "le è très ouvert — s'écrit AVANT la consonne"
+ },
+ {
+  "form": "โ-",
+  "sound": "oo",
+  "name": "sara oo",
+  "note": "le o fermé de « dos » — s'écrit AVANT la consonne"
+ }
+]

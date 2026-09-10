@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thaï</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./src/app.css">
+</head><body>
+
+<noscript><div class="warn" style="margin:16px">Cette page a besoin de JavaScript. Ouvre le fichier
+dans Chrome ou Safari (double-clic sur le fichier).</div></noscript>
+
+<div class="wrap">
+<header>
+  <h1>Thaï <span class="soft" style="font-weight:400;font-size:13px">v0.2</span></h1>
+  <div class="streak" id="streak"></div>
+</header>
+
+<div id="storage-warn" class="warn hide">
+  Ce navigateur n'autorise pas la sauvegarde locale : ta progression sera perdue en fermant l'onglet.
+  Ouvre le fichier directement depuis ton disque, ou exporte tes données avant de fermer.
+</div>
+
+<nav>
+  <button data-act="nav:accueil" id="t-accueil" class="on">Accueil</button>
+  <button data-act="nav:lettres" id="t-lettres">Lettres</button>
+  <button data-act="nav:lire"    id="t-lire">Lire</button>
+  <button data-act="nav:reviser" id="t-reviser">Réviser<span class="badge hide" id="due-badge">0</span></button>
+  <button data-act="nav:donnees" id="t-donnees">Données</button>
+</nav>
+
+<!-- ================= ACCUEIL ================= -->
+<section id="s-accueil">
+  <div class="card">
+    <div class="spread" style="margin-bottom:10px">
+      <h2 style="margin:0">Aujourd'hui</h2>
+      <span class="small soft" id="goal-txt"></span>
+    </div>
+    <div class="bar"><i id="goal-bar"></i></div>
+    <div class="row" style="margin-top:14px">
+      <button class="b pri big" data-act="start:review" id="btn-review"></button>
+    </div>
+    <p class="small soft" id="review-hint" style="margin-top:10px"></p>
+  </div>
+
+  <div class="card">
+    <h3>Progression — les 44 consonnes</h3>
+    <div id="lots"></div>
+  </div>
+
+  <div class="card">
+    <h3>Comment ça marche</h3>
+    <ol class="small" style="margin:0;padding-left:18px">
+      <li><b>Lettres</b> — tu découvres les nouvelles lettres, tu les écoutes, tu les traces.</li>
+      <li><b>Réviser</b> — chaque jour, l'app te redemande ce que tu es sur le point d'oublier. C'est ici que ça rentre.</li>
+      <li><b>Lire</b> — dès que tu connais quelques lettres, tu lis de vraies syllabes avec le bon ton.</li>
+      <li>Un lot se débloque quand 80 % de ses lettres sont sues. Rien ne t'empêche de forcer le passage.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= LETTRES ================= -->
+<section id="s-lettres" class="hide">
+  <div class="card" id="letter-detail"></div>
+  <div class="card">
+    <div class="spread" style="margin-bottom:10px">
+      <h3 style="margin:0">Les 44 consonnes</h3>
+      <span class="tiny soft">— vert : sue · orange : en cours</span>
+    </div>
+    <div id="letter-grid"></div>
+  </div>
+</section>
+
+<!-- ================= LIRE ================= -->
+<section id="s-lire" class="hide">
+  <div class="card" id="read-card"></div>
+  <div class="card">
+    <h3>La règle du jour</h3>
+    <p class="small">Une syllabe qui se termine par une <b>voyelle longue</b> est une syllabe <b>vivante</b>.
+    Sans marque de ton, son ton dépend seulement de la classe de la consonne :</p>
+    <table>
+      <tr><td><span class="badge-cls b-moyenne">moyenne</span></td><td>ton <b>moyen</b></td>
+          <td class="th">กา ดี ตอ</td></tr>
+      <tr><td><span class="badge-cls b-haute">haute</span></td><td>ton <b>montant</b></td>
+          <td class="th">สา ขี ผอ</td></tr>
+      <tr><td><span class="badge-cls b-basse">basse</span></td><td>ton <b>moyen</b></td>
+          <td class="th">มา คี นอ</td></tr>
+    </table>
+    <p class="small soft" style="margin-top:10px">Autrement dit : au départ, seule la classe <b>haute</b>
+    change quelque chose. C'est pour ça qu'on n'apprend par cœur que les 20 lettres des classes
+    moyenne et haute — tout le reste est de classe basse.</p>
+  </div>
+</section>
+
+<!-- ================= RÉVISER ================= -->
+<section id="s-reviser" class="hide">
+  <div class="card" id="review-card"></div>
+</section>
+
+<!-- ================= DONNÉES ================= -->
+<section id="s-donnees" class="hide">
+  <div class="card">
+    <h3>Audio</h3>
+    <p class="small" id="tts-status">Vérification…</p>
+    <div class="row">
+      <button class="b" data-act="tts:test">Tester la voix thaïe</button>
+      <label class="small row" style="gap:6px"><input type="checkbox" id="tts-toggle"> audio activé</label>
+    </div>
+    <p class="tiny soft" style="margin-top:10px">Si aucune voix thaïe n'est trouvée sur un Mac :
+      Réglages Système → Accessibilité → Contenu énoncé → Voix système → Gérer les voix → ajouter le thaï.</p>
+  </div>
+  <div class="card">
+    <h3>Ma progression</h3>
+    <div id="stats"></div>
+    <div class="row" style="margin-top:14px">
+      <button class="b" data-act="data:export">Exporter (fichier .json)</button>
+      <button class="b" data-act="data:import">Importer</button>
+      <button class="b" data-act="data:reset">Tout effacer</button>
+      <input type="file" id="import-file" accept="application/json" class="hide">
+    </div>
+    <p class="tiny soft" style="margin-top:10px">Exporte de temps en temps : c'est ce fichier qui te suivra
+    quand le projet passera en ligne. Le format est celui décrit dans PROJET-THAI.md.</p>
+  </div>
+  <div class="card">
+    <h3>Étape suivante du projet</h3>
+    <p class="small">Cette version garde le contenu (lettres, voyelles) <b>séparé</b> du moteur, exactement
+    comme prévu dans le document de fondation. Le jour où on passe au vrai projet, le bloc
+    <code>CONTENT</code> devient <code>content/letters.json</code>, le bloc <code>Storage</code> devient
+    l'appel à la base en ligne, et tout le reste ne bouge pas.</p>
+  </div>
+</section>
+
+<footer>Fichier autonome — fonctionne hors ligne. Progression enregistrée dans ce navigateur.</footer>
+</div>
+<script src="./src/app.js"></script>
+</body></html>

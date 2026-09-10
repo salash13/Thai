@@ -1,0 +1,22 @@
+{
+ "1": {
+  "title": "Lot 1 — les indispensables",
+  "desc": "Les 11 lettres les plus fréquentes."
+ },
+ "2": {
+  "title": "Lot 2 — le quotidien",
+  "desc": "Avec ห et อ, deux lettres au comportement particulier."
+ },
+ "3": {
+  "title": "Lot 3 — les fréquentes",
+  "desc": "Beaucoup de sons « s » et « th » qui se ressemblent."
+ },
+ "4": {
+  "title": "Lot 4 — les plus rares",
+  "desc": "Surtout dans les mots venus du pali et du sanskrit."
+ },
+ "5": {
+  "title": "Lot 5 — les anciennes",
+  "desc": "ฃ et ฅ ne s'écrivent plus : à reconnaître, pas à retenir."
+ }
+}
