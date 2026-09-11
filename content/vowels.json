@@ -280,9 +280,12 @@
   "sound": "ua",
   "length": "longue",
   "live": true,
-  "closable": false,
+  "closable": true,
+  "closedBefore": "",
+  "closedAfter": "ว",
+  "closedMarkPos": "before",
   "name": "sara ua",
-  "note": "diphtongue « oua »"
+  "note": "diphtongue « oua ». Devant une finale, ั disparaît et ว seul reste : ด่วน (dùan)"
  },
  {
   "form": "ไ-",

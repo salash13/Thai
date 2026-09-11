@@ -1,10 +1,10 @@
 /* Thaï — feuille de style (cf. docs/PROJET-THAI.md §4) */
-@font-face { font-family:'ThaiLoop';
+@font-face { font-family:'ThaiLoop'; font-display:swap;
   src:url('../assets/fonts/NotoSansThaiLooped-Regular.woff2') format('woff2'); }
-@font-face { font-family:'ThaiUI';
+@font-face { font-family:'ThaiUI'; font-display:swap;
   src:url('../assets/fonts/NotoSansThai-Regular.woff2') format('woff2'); }
 :root{
-  --ink:#22262B; --soft:#6F7580; --line:#E7E3DB; --bg:#FBFAF7; --card:#fff;
+  --ink:#22262B; --soft:#5C6270; --line:#E7E3DB; --bg:#FBFAF7; --card:#fff;
   --accent:#8A5A2B; --accent-soft:#FBF6EF; --ok:#1E7A48; --no:#C1272D;
   --moyenne:#1565A8; --haute:#1E7A48; --basse:#C1272D;
 }
@@ -35,13 +35,13 @@ header{display:flex;justify-content:space-between;align-items:center;gap:10px;ma
 
 nav{display:flex;gap:4px;background:#F1EEE7;padding:4px;border-radius:11px;margin-bottom:16px;
     position:sticky;top:6px;z-index:5}
-nav button{flex:1;border:0;background:transparent;padding:8px 4px;border-radius:8px;
+nav button{flex:1;border:0;background:transparent;padding:8px 4px;min-height:44px;border-radius:8px;
   font:inherit;font-size:13px;font-weight:550;color:var(--soft);cursor:pointer;white-space:nowrap}
 nav button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.09)}
 nav .badge{display:inline-block;min-width:17px;padding:0 4px;margin-left:4px;border-radius:9px;
   background:var(--accent);color:#fff;font-size:10.5px;line-height:17px;vertical-align:1px}
 
-button.b{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 15px;
+button.b{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 15px;min-height:44px;
   font:inherit;font-size:14px;cursor:pointer;font-weight:550;color:var(--ink)}
 button.b:hover{border-color:#CFC8BA}
 button.b.pri{background:var(--accent);color:#fff;border-color:var(--accent)}

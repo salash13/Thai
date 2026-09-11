@@ -565,7 +565,7 @@ Principe : **lisible par un francophone**, pas conforme à une norme internation
 | `dj` | จ | proche de « dj » de djinn |
 | `tch` | ช ฉ | |
 | `ng` | ง | comme « parking », même en début de mot |
-| `ï` | le i d'une diphtongue (ไ ใ) | djaï se lit « djaïe » |
+| `ai` | la diphtongue ไ/ใ, épelée en toutes lettres (pas de `ï`) | ไก่ = kài |
 
 **Voyelles**
 

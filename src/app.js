@@ -84,7 +84,7 @@ function grade(id, ok, ms) {
     const slow = ms > 6000;
     if (it.iv === 0) it.iv = 0.007;
     else if (it.iv < 0.01) it.iv = 1;
-    else it.iv = it.iv * (slow ? 1.4 : it.ef);
+    else it.iv = Math.min(3650, it.iv * (slow ? 1.4 : it.ef));   // plafond 10 ans : évite une dérive sans fin
     if (!slow) it.ef = Math.min(3.0, it.ef + 0.05);
   }
   it.due = Date.now() + it.iv * DAY;
@@ -255,9 +255,14 @@ function makeSyllable() {
       cand.push(phonOf(onsetIni, alt.vowelSound, tone, alt.finalSound));                          // piège de finale
     }
   }
-  for (let i = 0; i < 6 && cand.length < 6; i++)
+  /* garantit 3 distracteurs uniques même quand les pièges ci-dessus se recoupent ou sont
+     indisponibles (petit pool de lettres/voyelles en tout début de progression) */
+  let distract = [...new Set(cand)].filter(o => o !== good);
+  for (let guard = 0; distract.length < 3 && guard < 50; guard++) {
     cand.push(phonOf(onsetIni, pick(VOWELS).sound, pick(TONES), finalSound));
-  const distract = [...new Set(cand)].filter(o => o !== good).slice(0, 3);
+    distract = [...new Set(cand)].filter(o => o !== good);
+  }
+  distract = distract.slice(0, 3);
   return { th: writeSyl(onsetCh, V, mark, F), letter: L, cls: cls, nam: nam ? namH : null, cluster: cluster,
            vowel: V, final: F, mark: mark, live: live, tone: tone, good: good,
            options: shuffle([good, ...distract]) };
@@ -455,6 +460,7 @@ function nextQ() {
   qStart = Date.now(); qLocked = false;
   if (id === 'NEWSYL') { curQ = { kind: 'syl', syl: makeSyllable() }; return renderQSyl(); }
   const [, ch, facet] = id.split(':');
+  if (!byChar[ch] || !FACETS.includes(facet)) return nextQ();   // clé corrompue (ex. import invalide) : on passe au suivant plutôt que planter
   curQ = { kind: 'letter', id: id, ch: ch, facet: facet };
   renderQLetter();
 }
@@ -462,6 +468,7 @@ function progressLine() {
   return '<div class="spread tiny soft" style="margin-bottom:8px"><span>' + (sessionDone + 1) + ' · reste ' +
          queue.length + '</span><span>' + sessionOk + ' justes</span></div>';
 }
+function iniDisplay(ini) { return ini === '(porteur)' ? '(porteur — aucun son propre)' : ini + '-'; }
 function renderQLetter() {
   const L = byChar[curQ.ch], card = document.getElementById('review-card');
   const pool = unlockedLetters().filter(l => l.ch !== L.ch);
@@ -473,10 +480,10 @@ function renderQLetter() {
     opts = uniq([good, ...shuffle(pool).map(l => l.ini)]).slice(0, 4);
     opts = ensure(opts, good);
     card.innerHTML = progressLine() + '<div class="q-prompt">' + prompt + '</div>' + subject +
-      '<div class="opts">' + shuffle(opts).map(o => '<button class="opt" data-act="ans:' + o + '">' + o + '-</button>').join('') + '</div><div class="fb" id="q-fb"></div>';
+      '<div class="opts">' + shuffle(opts).map(o => '<button class="opt" data-act="ans:' + o + '">' + iniDisplay(o) + '</button>').join('') + '</div><div class="fb" id="q-fb"></div>';
   } else if (curQ.facet === 'lettre') {
     prompt = 'Quelle lettre se prononce comme ça ?';
-    subject = '<div class="q-mid">' + L.ini + '- <span class="soft" style="font-size:16px">(' + L.namePh + ')</span></div>';
+    subject = '<div class="q-mid">' + iniDisplay(L.ini) + ' <span class="soft" style="font-size:16px">(' + L.namePh + ')</span></div>';
     good = L.ch;
     opts = ensure(uniq([good, ...shuffle(pool).map(l => l.ch)]).slice(0, 4), good);
     card.innerHTML = progressLine() + '<div class="q-prompt">' + prompt + '</div>' + subject +
