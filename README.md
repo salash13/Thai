@@ -17,7 +17,7 @@ Le programme complet et les décisions du projet sont dans [`docs/PROJET-THAI.md
 > Le double-clic sur `index.html` ne suffit pas : la page charge ses leçons depuis `content/*.json`,
 > et les navigateurs bloquent ces lectures en `file://`.
 
-## Ce que fait l'app aujourd'hui (v0.2)
+## Ce que fait l'app aujourd'hui (v0.3)
 
 - Les 44 consonnes en 5 lots, débloqués progressivement
 - Répétition espacée : l'app redemande chaque élément juste avant l'oubli
@@ -54,6 +54,6 @@ Voir [`CLAUDE.md`](CLAUDE.md) — c'est aussi le fichier que lit Claude Code pou
 |---|---|
 | v0.1 ✅ | lettres du lot 1, tracé, quiz |
 | v0.2 ✅ | 44 consonnes, répétition espacée, lecture de syllabes, audio, export |
-| v0.3 | voyelles courtes, les 4 marques de ton, premiers mots |
-| v0.4 | vocabulaire A1, phrases, dictionnaire |
+| v0.3 ✅ | voyelles courtes, les 4 marques de ton, finales -y/-w, groupes consonantiques (N0 — lecture — complet) |
+| v0.4 | premiers mots, vocabulaire A1, phrases, dictionnaire |
 | v1.0 | contenu relu par une locutrice native, comptes et synchronisation |

@@ -7,7 +7,7 @@
 - **Nom de code** : `thai-fr` (nom définitif à choisir — voir §10.3)
 - **Auteur** : Ben
 - **Version du document** : 0.1 — 10 septembre 2026
-- **Statut** : fondations posées, rien de codé (hors prototype « Alphabet lot 1 »)
+- **Statut** : v0.3 livrée et en ligne (https://salash13.github.io/Thai/) — voir §10.1
 
 ### Décisions déjà prises
 
@@ -515,21 +515,28 @@ C'est le point de contrôle qualité du projet. Le piège classique : demander �
 |---|---|---|
 | **v0.1** ✅ | Squelette + lettres lot 1 + tracé + quiz | livré |
 | **v0.2** ✅ | Moteur SRS + écran Révision + les 44 consonnes + voyelles longues + lecture de syllabes + audio + export | livré le 10/09/2026 — reste à l'utiliser tous les jours |
-| **v0.3** | Voyelles + syllabes + règles de tons (N0 complet) | je lis un mot inconnu à voix haute |
+| **v0.3** ✅ | Voyelles courtes + règles de tons complètes + finales -y/-w + groupes consonantiques อักษรควบแท้ (N0 complet) | livré le 11/09/2026, en ligne sur GitHub Pages — je lis un mot inconnu à voix haute |
 | **v0.4** | A1 unités 1 à 4 + dictionnaire + audio TTS | je tiens une présentation simple |
 | **v0.5** | PWA installable + statistiques + export | je m'en sers sur mon téléphone tous les jours |
 | **v1.0** | A1 complet, relu par une native, comptes + sync | montrable à d'autres sans avoir honte |
 
-### 10.2 Les 8 prochaines étapes concrètes
+### 10.2 Les 8 prochaines étapes concrètes (liste de départ — dépassée, gardée pour mémoire)
 
-1. [ ] Valider la romanisation (Annexe A) — 15 min, mais bloquant pour tout le reste
-2. [ ] Choisir la stack (§6.1) et créer le dépôt Git avec l'arborescence de §6.3
-3. [ ] Écrire `content/letters.json` avec les 44 consonnes (classe, nom, son initial/final) — je peux le générer
-4. [ ] Porter le prototype « Alphabet lot 1 » dans le repo comme premier écran
-5. [ ] Coder le moteur SRS (§4.3) et l'écran Révision — le cœur de l'app, ~200 lignes
-6. [ ] Écrire les unités 0.1 à 0.5 complètes et les tester sur moi pendant une semaine
-7. [ ] Déployer sur Netlify et l'installer sur le téléphone
-8. [ ] Première session de relecture native (§8) sur les 50 premiers mots
+1. [x] Valider la romanisation (Annexe A) — utilisée telle quelle dans tout le contenu écrit depuis
+2. [x] Choisir la stack (§6.1) et créer le dépôt Git avec l'arborescence de §6.3
+3. [x] Écrire `content/letters.json` avec les 44 consonnes (classe, nom, son initial/final)
+4. [x] Porter le prototype « Alphabet lot 1 » dans le repo comme premier écran
+5. [x] Coder le moteur SRS (§4.3) et l'écran Révision
+6. [ ] Écrire les unités 0.1 à 0.5 complètes et les tester une semaine — le moteur N0 (lecture) est
+      complet (v0.3), mais l'usage quotidien réel reste à faire
+7. [x] Déployer — sur GitHub Pages plutôt que Netlify (https://salash13.github.io/Thai/), et installé
+      sur téléphone via ce lien
+8. [ ] Première session de relecture native (§8) — pas encore de vocabulaire à relire (`content/words/`
+      n'existe pas encore, voir §10.1 v0.4)
+
+Prochaine étape concrète réelle : commencer `content/words/` pour la v0.4 (premiers mots + vocabulaire
+A1), en gardant อ นำ / การันต์ / อักษรควบไม่แท้ comme entrées lexicales plutôt que règles génératives
+(cf. `README.md`).
 
 ### 10.3 Nom du projet (à choisir)
 
