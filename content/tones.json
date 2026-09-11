@@ -1,0 +1,22 @@
+{
+ "marks": {
+  "่": { "name": "ไม้เอก", "romanName": "mái èek" },
+  "้": { "name": "ไม้โท", "romanName": "mái thoo" },
+  "๊": { "name": "ไม้ตรี", "romanName": "mái trii" },
+  "๋": { "name": "ไม้จัตวา", "romanName": "mái djàt-tà-waa" }
+ },
+ "rules": {
+  "moyenne": {
+   "sansMarque": { "vivante": "moyen", "morte": "bas" },
+   "avecMarque": { "่": "bas", "้": "descendant", "๊": "haut", "๋": "montant" }
+  },
+  "haute": {
+   "sansMarque": { "vivante": "montant", "morte": "bas" },
+   "avecMarque": { "่": "bas", "้": "descendant" }
+  },
+  "basse": {
+   "sansMarque": { "vivante": "moyen", "morteCourte": "haut", "morteLongue": "descendant" },
+   "avecMarque": { "่": "descendant", "้": "haut" }
+  }
+ }
+}

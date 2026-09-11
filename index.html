@@ -74,20 +74,10 @@ dans Chrome ou Safari (double-clic sur le fichier).</div></noscript>
 <section id="s-lire" class="hide">
   <div class="card" id="read-card"></div>
   <div class="card">
-    <h3>La règle du jour</h3>
-    <p class="small">Une syllabe qui se termine par une <b>voyelle longue</b> est une syllabe <b>vivante</b>.
-    Sans marque de ton, son ton dépend seulement de la classe de la consonne :</p>
-    <table>
-      <tr><td><span class="badge-cls b-moyenne">moyenne</span></td><td>ton <b>moyen</b></td>
-          <td class="th">กา ดี ตอ</td></tr>
-      <tr><td><span class="badge-cls b-haute">haute</span></td><td>ton <b>montant</b></td>
-          <td class="th">สา ขี ผอ</td></tr>
-      <tr><td><span class="badge-cls b-basse">basse</span></td><td>ton <b>moyen</b></td>
-          <td class="th">มา คี นอ</td></tr>
-    </table>
-    <p class="small soft" style="margin-top:10px">Autrement dit : au départ, seule la classe <b>haute</b>
-    change quelque chose. C'est pour ça qu'on n'apprend par cœur que les 20 lettres des classes
-    moyenne et haute — tout le reste est de classe basse.</p>
+    <h3>La règle du ton</h3>
+    <p class="small">Le ton d'une syllabe dépend de trois choses : la <b>classe</b> de sa consonne initiale,
+    si la syllabe est <b>vivante</b> ou <b>morte</b>, et si elle porte une <b>marque de ton</b>.</p>
+    <div id="tone-rules"></div>
   </div>
 </section>
 
@@ -122,10 +112,11 @@ dans Chrome ou Safari (double-clic sur le fichier).</div></noscript>
   </div>
   <div class="card">
     <h3>Étape suivante du projet</h3>
-    <p class="small">Cette version garde le contenu (lettres, voyelles) <b>séparé</b> du moteur, exactement
-    comme prévu dans le document de fondation. Le jour où on passe au vrai projet, le bloc
-    <code>CONTENT</code> devient <code>content/letters.json</code>, le bloc <code>Storage</code> devient
-    l'appel à la base en ligne, et tout le reste ne bouge pas.</p>
+    <p class="small">Le niveau <b>N0 — Lire</b> couvre maintenant les 24 voyelles, les 4 marques de ton, la
+    distinction syllabe vivante / morte, ห นำ, les finales glissantes -y/-w et les groupes consonantiques
+    อักษรควบแท้ (cf. <code>docs/PROJET-THAI.md</code> §3.2). Restent volontairement hors moteur — trop
+    irréguliers pour une règle générale, ce sera du vocabulaire dans <code>content/words/</code> : อ นำ
+    (4 mots fixes), le การันต์ (lettres muettes) et les อักษรควบไม่แท้ (ผล, ทร…).</p>
   </div>
 </section>
 

@@ -2,14 +2,14 @@
    Ce fichier ne contient QUE de la logique : tout le cours vit dans content/*.json. */
 
 async function loadContent() {
-  const [letters, vowels, lots, glyphs] = await Promise.all(
-    ['letters', 'vowels', 'lots', 'glyphs'].map(n =>
+  const [letters, vowels, lots, glyphs, tones, clusters] = await Promise.all(
+    ['letters', 'vowels', 'lots', 'glyphs', 'tones', 'clusters'].map(n =>
       fetch('./content/' + n + '.json').then(r => {
         if (!r.ok) throw new Error('content/' + n + '.json introuvable');
         return r.json();
       })));
   letters.forEach(l => l.glyph = glyphs[l.ch]);
-  return { letters, vowels, lots };
+  return { letters, vowels, lots, tones, clusters };
 }
 
 (async function main() {
@@ -17,8 +17,14 @@ async function loadContent() {
    1. CONTENU — chargé depuis content/*.json (aucune logique ici)
    ======================================================================= */
 const CONTENT = await loadContent();
-const LETTERS = CONTENT.letters, VOWELS = CONTENT.vowels, LOTS = CONTENT.lots;
+const LETTERS = CONTENT.letters, VOWELS = CONTENT.vowels, LOTS = CONTENT.lots, TONES_RULES = CONTENT.tones;
 const byChar = Object.fromEntries(LETTERS.map(l => [l.ch, l]));
+/* อักษรควบแท้ (§0.14) : les deux lettres se prononcent, la classe reste celle de la 1ère —
+   liste fermée sans exception (contrairement à ผล/ทร etc., volontairement absents : ce sont
+   des อักษรควบไม่แท้, la 2e lettre y est muette par exception lexicale, pas par règle générale) */
+const CLUSTERS = CONTENT.clusters
+  .map(c => ({ first: byChar[c.first], second: byChar[c.second] }))
+  .filter(c => c.first && c.second);
 
 /* =======================================================================
    2. STOCKAGE  (adaptateur — à remplacer par la base en ligne en phase 2)
@@ -116,6 +122,9 @@ const Audio2 = {
     };
     pick();
     speechSynthesis.onvoiceschanged = pick;
+    // Bug Chrome connu : le moteur se fige après ~15 s d'inactivité et ne relit plus rien
+    // tant qu'on ne le "réveille" pas — https://bugs.chromium.org/p/chromium/issues/detail?id=679437
+    setInterval(() => { speechSynthesis.pause(); speechSynthesis.resume(); }, 5000);
   },
   say(text, rate) {
     if (!state.settings.tts || !this.voice) return false;
@@ -123,6 +132,7 @@ const Audio2 = {
       speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'th-TH'; u.voice = this.voice; u.rate = rate || 0.8;
+      u.onerror = e => console.error('Audio thaï — la lecture a échoué :', e.error);
       speechSynthesis.speak(u);
       return true;
     } catch (e) { return false; }
@@ -134,34 +144,121 @@ const Audio2 = {
    ======================================================================= */
 const TONE_MARK = { moyen: '', haut: '́', bas: '̀', descendant: '̂', montant: '̌' };
 const TONES = ['moyen', 'haut', 'bas', 'descendant', 'montant'];
+const MARKS = ['่', '้', '๊', '๋'];   // mái èek, mái thoo, mái trii, mái djàttàwaa
 
-function toneOf(cls) { return cls === 'haute' ? 'montant' : 'moyen'; }   // syllabe vivante, sans marque
-function toneRule(cls) {
-  return 'classe ' + cls + ' + syllabe vivante, sans marque de ton → ton <b>' + toneOf(cls) + '</b>';
+/* Annexe B, cf. content/tones.json — jamais de règle de ton codée en dur ici. */
+function toneOf(cls, live, length, mark) {
+  const r = TONES_RULES.rules[cls];
+  if (mark) return r.avecMarque[mark];
+  if (live) return r.sansMarque.vivante;
+  if (cls === 'basse') return length === 'courte' ? r.sansMarque.morteCourte : r.sansMarque.morteLongue;
+  return r.sansMarque.morte;
 }
-function writeSyl(letter, vowel) {
-  return vowel.form.startsWith('-') ? letter.ch + vowel.form.slice(1)
-                                    : vowel.form.replace('-', '') + letter.ch;
+function toneRule(cls, live, length, mark) {
+  if (mark) {
+    const m = TONES_RULES.marks[mark];
+    return 'classe ' + cls + ' + ' + m.name + ' (' + m.romanName + ') → ton <b>' + toneOf(cls, live, length, mark) + '</b>';
+  }
+  const etat = live ? 'vivante' : (cls === 'basse' ? 'morte, voyelle ' + length : 'morte');
+  return 'classe ' + cls + ' + syllabe ' + etat + ', sans marque de ton → ton <b>' + toneOf(cls, live, length, mark) + '</b>';
 }
-function phonOf(ini, sound, tone) {
+function finalNote(syl) {
+  if (!syl.final) return '';
+  return ' · finale ' + syl.final.ch + ' (' + syl.final.fin + ') → syllabe ' + (syl.live ? 'vivante' : 'morte');
+}
+function onsetLabel(syl) {
+  if (syl.cluster) return syl.cluster.first.ch + syl.cluster.second.ch + ' (groupe consonantique : ' +
+    syl.cluster.first.ch + ' et ' + syl.cluster.second.ch + ' se prononcent toutes les deux, la classe reste celle de ' +
+    syl.cluster.first.ch + ')';
+  return syl.nam ? syl.nam.ch + syl.letter.ch + ' (' + syl.nam.ch + ' นำ : ' + syl.nam.ch +
+    ' muet, fait passer ' + syl.letter.ch + ' en classe haute)' : syl.letter.ch;
+}
+/* marques possibles pour une classe donnée : la classe moyenne accepte les 4, haute et basse seulement 2 (Annexe B) */
+function marksFor(cls) { return cls === 'moyenne' ? MARKS : MARKS.slice(0, 2); }
+function pickMark(cls, markPos) {
+  if (!markPos) return '';                                // pas de position connue : pas de marque, trop d'exceptions d'écriture
+  if (Math.random() < 0.4) return '';                      // la plupart des syllabes n'ont pas de marque
+  return pick(marksFor(cls));
+}
+/* §0.13 — sons finaux couverts : les 6 finales "simples" par concaténation directe.
+   -y et -w (glissantes) ne concatènent pas : le son dépend de la voyelle qui précède
+   (ex. -าย = "aai", pas "aay") — voir vowels.json champs glideY/glideW, et le tirage
+   du pool de finales dans makeSyllable() qui ne propose -y/-w que si la voyelle piochée
+   a la combinaison correspondante. */
+const FINAL_SOUND = { '-k': 'k', '-ng': 'ng', '-t': 't', '-n': 'n', '-p': 'p', '-m': 'm' };
+const LIVE_FINALS = ['-ng', '-n', '-m', '-y', '-w'];   // Annexe B : vivante = voyelle longue ou finale -m/-n/-ng/-w/-y
+function writeSyl(onsetCh, vowel, mark, finalLetter) {
+  mark = mark || '';
+  const closed = !!finalLetter;
+  const before = closed ? vowel.closedBefore : vowel.before;
+  const after = closed ? vowel.closedAfter : vowel.after;
+  const markPos = closed ? vowel.closedMarkPos : vowel.markPos;
+  const body = markPos === 'after' ? before + onsetCh + after + mark : before + onsetCh + mark + after;
+  return body + (finalLetter ? finalLetter.ch : '');
+}
+function phonOf(ini, sound, tone, finalSound) {
   const chars = Array.from(sound);
   const head = (ini === '(porteur)' ? '' : ini);
-  return head + chars[0] + TONE_MARK[tone] + chars.slice(1).join('');
+  return head + chars[0] + TONE_MARK[tone] + chars.slice(1).join('') + (finalSound || '');
 }
+/* -y/-w : la voyelle et la finale fusionnent en une diphtongue toute faite (V.glideY/glideW),
+   ce n'est pas une simple concaténation comme pour les 6 finales "simples" */
+function soundOf(V, F) {
+  if (F && F.fin === '-y' && V.glideY) return { vowelSound: V.glideY, finalSound: '' };
+  if (F && F.fin === '-w' && V.glideW) return { vowelSound: V.glideW, finalSound: '' };
+  return { vowelSound: V.sound, finalSound: F ? (FINAL_SOUND[F.fin] || '') : '' };
+}
+/* §0.11 — ห นำ : un ห muet devant une sonante sans pendant en classe haute (ง ญ น ม ย ร ล ว) fait
+   passer la syllabe en classe haute, mais c'est la 2e lettre qui porte le son initial (หมา = mǎa). */
 function makeSyllable() {
   const pool = unlockedLetters().filter(l => !l.obsolete);
-  const L = pick(pool), V = pick(VOWELS);
-  const tone = toneOf(L.cls);
-  const good = phonOf(L.ini, V.sound, tone);
+  const namH = pool.find(l => l.ch === 'ห');
+  const namPool = namH ? pool.filter(l => l.namable) : [];
+  const clusterPool = CLUSTERS.filter(c => pool.includes(c.first) && pool.includes(c.second));
+  const roll = Math.random();
+  let L, cls, onsetCh, onsetIni, cluster = null, nam = false;
+  if (clusterPool.length > 0 && roll < 0.15) {
+    cluster = pick(clusterPool);
+    L = cluster.first; cls = L.cls;
+    onsetCh = cluster.first.ch + cluster.second.ch;
+    onsetIni = cluster.first.ini + cluster.second.ini;
+  } else if (namPool.length > 0 && roll < 0.35) {
+    L = pick(namPool); cls = 'haute'; nam = true;
+    onsetCh = namH.ch + L.ch; onsetIni = L.ini;
+  } else {
+    L = pick(pool); cls = L.cls;
+    onsetCh = L.ch; onsetIni = L.ini;
+  }
+  const V = pick(VOWELS);
+  /* -y/-w ne rejoignent le pool que si CETTE voyelle a une forme glissante connue (glideY/glideW) */
+  const finalPool = pool.filter(l => FINAL_SOUND[l.fin] ||
+    (l.fin === '-y' && V.glideY) || (l.fin === '-w' && V.glideW));
+  const closed = V.closable && finalPool.length > 0 && Math.random() < 0.45;
+  const F = closed ? pick(finalPool) : null;
+  const markPos = closed ? V.closedMarkPos : V.markPos;
+  const mark = pickMark(cls, markPos);
+  const live = closed ? LIVE_FINALS.includes(F.fin) : V.live;
+  const tone = toneOf(cls, live, V.length, mark);
+  const { vowelSound, finalSound } = soundOf(V, F);
+  const good = phonOf(onsetIni, vowelSound, tone, finalSound);
   const cand = [];
-  cand.push(phonOf(L.ini, V.sound, pick(TONES.filter(t => t !== tone))));      // piège de ton
+  cand.push(phonOf(onsetIni, vowelSound, pick(TONES.filter(t => t !== tone)), finalSound));      // piège de ton
   const other = pool.filter(x => x.ini !== L.ini);
-  if (other.length) cand.push(phonOf(pick(other).ini, V.sound, tone));          // piège de consonne
-  cand.push(phonOf(L.ini, pick(VOWELS.filter(v => v.sound !== V.sound)).sound, tone)); // piège de voyelle
+  if (other.length) cand.push(phonOf(pick(other).ini, vowelSound, tone, finalSound));          // piège de consonne
+  cand.push(phonOf(onsetIni, pick(VOWELS.filter(v => v.sound !== V.sound)).sound, tone, finalSound)); // piège de voyelle
+  if (F) {
+    const otherFinals = finalPool.filter(f => f.fin !== F.fin);
+    if (otherFinals.length) {
+      const altF = pick(otherFinals);
+      const alt = soundOf(V, altF);
+      cand.push(phonOf(onsetIni, alt.vowelSound, tone, alt.finalSound));                          // piège de finale
+    }
+  }
   for (let i = 0; i < 6 && cand.length < 6; i++)
-    cand.push(phonOf(L.ini, pick(VOWELS).sound, pick(TONES)));
+    cand.push(phonOf(onsetIni, pick(VOWELS).sound, pick(TONES), finalSound));
   const distract = [...new Set(cand)].filter(o => o !== good).slice(0, 3);
-  return { th: writeSyl(L, V), letter: L, vowel: V, tone: tone, good: good,
+  return { th: writeSyl(onsetCh, V, mark, F), letter: L, cls: cls, nam: nam ? namH : null, cluster: cluster,
+           vowel: V, final: F, mark: mark, live: live, tone: tone, good: good,
            options: shuffle([good, ...distract]) };
 }
 function pick(a) { return a[(Math.random() * a.length) | 0]; }
@@ -270,8 +367,30 @@ function setupTrace() {
 function clearTrace() { const c = document.getElementById('trace'); if (c && tctx) tctx.clearRect(0, 0, c.width, c.height); }
 
 /* ---------- lire ---------- */
-let curSyl = null, sylStart = 0, sylLocked = false;
+let curSyl = null, sylStart = 0, sylLocked = false, toneRulesRendered = false;
+function renderToneRules() {
+  if (toneRulesRendered) return; toneRulesRendered = true;
+  const rows = c => {
+    const r = TONES_RULES.rules[c];
+    let out = '<tr><td><span class="badge-cls b-' + c + '">' + c + '</span></td><td>vivante, sans marque</td><td><b>' + r.sansMarque.vivante + '</b></td></tr>';
+    if (c === 'basse') {
+      out += '<tr><td></td><td>morte, voyelle courte, sans marque</td><td><b>' + r.sansMarque.morteCourte + '</b></td></tr>';
+      out += '<tr><td></td><td>morte, voyelle longue, sans marque</td><td><b>' + r.sansMarque.morteLongue + '</b></td></tr>';
+    } else {
+      out += '<tr><td></td><td>morte, sans marque</td><td><b>' + r.sansMarque.morte + '</b></td></tr>';
+    }
+    for (const m of marksFor(c))
+      out += '<tr><td></td><td>' + TONES_RULES.marks[m].name + ' (' + m + ')</td><td><b>' + r.avecMarque[m] + '</b></td></tr>';
+    return out;
+  };
+  document.getElementById('tone-rules').innerHTML =
+    '<table>' + ['moyenne', 'haute', 'basse'].map(rows).join('') + '</table>' +
+    '<p class="small soft" style="margin-top:10px">Astuce : au départ, seule la classe <b>haute</b> change quelque ' +
+    'chose par rapport à la classe basse (sans marque, syllabe vivante). C\'est pour ça qu\'on n\'apprend par cœur ' +
+    'que les 20 lettres des classes moyenne et haute — tout le reste est de classe basse.</p>';
+}
 function renderLire() {
+  renderToneRules();
   if (unlockedLetters().filter(l => !l.obsolete).length < 3) {
     document.getElementById('read-card').innerHTML = '<p class="small">Découvre d\'abord quelques lettres.</p>';
     return;
@@ -295,7 +414,8 @@ function answerSyl(choice) {
   Audio2.say(curSyl.th, 0.7);
   document.getElementById('syl-fb').innerHTML =
     (ok ? '<span class="g">Juste.</span> ' : '<span class="b">Non — c\'est ' + curSyl.good + '.</span> ') +
-    '<div class="rule">' + curSyl.letter.ch + ' est de ' + toneRule(curSyl.letter.cls) +
+    '<div class="rule">' + onsetLabel(curSyl) + ' est de ' +
+    toneRule(curSyl.cls, curSyl.live, curSyl.vowel.length, curSyl.mark) + finalNote(curSyl) +
     '<br>' + curSyl.vowel.form + ' = ' + curSyl.vowel.sound + ' — ' + curSyl.vowel.note + '</div>' +
     '<div class="row" style="margin-top:10px"><button class="b pri" data-act="nav:lire">Syllabe suivante →</button>' +
     '<button class="b" data-act="sayth:' + curSyl.th + '">▶ Réécouter</button></div>';
@@ -406,7 +526,8 @@ function answerQ(choice) {
     grade(sylId(s.th), ok, Date.now() - qStart);
     Audio2.say(s.th, 0.7);
     fb = (ok ? '<span class="g">Juste.</span> ' : '<span class="b">Non — c\'est ' + s.good + '.</span> ') +
-      '<div class="rule">' + s.letter.ch + ' est de ' + toneRule(s.letter.cls) + '</div>';
+      '<div class="rule">' + onsetLabel(s) + ' est de ' +
+      toneRule(s.cls, s.live, s.vowel.length, s.mark) + finalNote(s) + '</div>';
   }
   document.getElementById('q-fb').innerHTML = fb +
     '<div class="row" style="margin-top:12px"><button class="b pri" data-act="next">Continuer →</button></div>';

@@ -1,5 +1,6 @@
 [
  {
+  "id": "c_k_kai",
   "ch": "ก",
   "nameTh": "ก ไก่",
   "namePh": "kɔɔ kài",
@@ -8,9 +9,11 @@
   "ini": "k",
   "fin": "-k",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_kh_khwaai",
   "ch": "ค",
   "nameTh": "ค ควาย",
   "namePh": "khɔɔ khwaai",
@@ -19,9 +22,11 @@
   "ini": "kh",
   "fin": "-k",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_ng_nguu",
   "ch": "ง",
   "nameTh": "ง งู",
   "namePh": "ngɔɔ nguu",
@@ -30,9 +35,11 @@
   "ini": "ng",
   "fin": "-ng",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_d_dek",
   "ch": "ด",
   "nameTh": "ด เด็ก",
   "namePh": "dɔɔ dèk",
@@ -41,9 +48,11 @@
   "ini": "d",
   "fin": "-t",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_t_tao",
   "ch": "ต",
   "nameTh": "ต เต่า",
   "namePh": "tɔɔ tào",
@@ -52,9 +61,11 @@
   "ini": "t",
   "fin": "-t",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_n_nuu",
   "ch": "น",
   "nameTh": "น หนู",
   "namePh": "nɔɔ nǔu",
@@ -63,9 +74,11 @@
   "ini": "n",
   "fin": "-n",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_b_bai-maai",
   "ch": "บ",
   "nameTh": "บ ใบไม้",
   "namePh": "bɔɔ baï-máai",
@@ -74,9 +87,11 @@
   "ini": "b",
   "fin": "-p",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_m_maa",
   "ch": "ม",
   "nameTh": "ม ม้า",
   "namePh": "mɔɔ máa",
@@ -85,9 +100,11 @@
   "ini": "m",
   "fin": "-m",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_r_rua",
   "ch": "ร",
   "nameTh": "ร เรือ",
   "namePh": "rɔɔ rʉa",
@@ -96,9 +113,11 @@
   "ini": "r",
   "fin": "-n",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_l_ling",
   "ch": "ล",
   "nameTh": "ล ลิง",
   "namePh": "lɔɔ ling",
@@ -107,9 +126,11 @@
   "ini": "l",
   "fin": "-n",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_s_sua",
   "ch": "ส",
   "nameTh": "ส เสือ",
   "namePh": "sɔ̌ɔ sʉ̌a",
@@ -118,9 +139,11 @@
   "ini": "s",
   "fin": "-t",
   "lot": 1,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_h_hiip",
   "ch": "ห",
   "nameTh": "ห หีบ",
   "namePh": "hɔ̌ɔ hìip",
@@ -129,9 +152,11 @@
   "ini": "h",
   "fin": "—",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_o_aang",
   "ch": "อ",
   "nameTh": "อ อ่าง",
   "namePh": "ɔɔ àang",
@@ -140,9 +165,11 @@
   "ini": "(porteur)",
   "fin": "—",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_th_tha-haan",
   "ch": "ท",
   "nameTh": "ท ทหาร",
   "namePh": "thɔɔ thá-hǎan",
@@ -151,9 +178,11 @@
   "ini": "th",
   "fin": "-t",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_ph_phaan",
   "ch": "พ",
   "nameTh": "พ พาน",
   "namePh": "phɔɔ phaan",
@@ -162,9 +191,11 @@
   "ini": "ph",
   "fin": "-p",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_w_ween",
   "ch": "ว",
   "nameTh": "ว แหวน",
   "namePh": "wɔɔ wɛ̌ɛn",
@@ -173,9 +204,11 @@
   "ini": "w",
   "fin": "-w",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_y_yak",
   "ch": "ย",
   "nameTh": "ย ยักษ์",
   "namePh": "yɔɔ yák",
@@ -184,9 +217,11 @@
   "ini": "y",
   "fin": "-y",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_dj_djaan",
   "ch": "จ",
   "nameTh": "จ จาน",
   "namePh": "djɔɔ djaan",
@@ -195,9 +230,11 @@
   "ini": "dj",
   "fin": "-t",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_kh_khai",
   "ch": "ข",
   "nameTh": "ข ไข่",
   "namePh": "khɔ̌ɔ khài",
@@ -206,9 +243,11 @@
   "ini": "kh",
   "fin": "-k",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_tch_tchaang",
   "ch": "ช",
   "nameTh": "ช ช้าง",
   "namePh": "tchɔɔ tcháang",
@@ -217,9 +256,11 @@
   "ini": "tch",
   "fin": "-t",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_p_plaa",
   "ch": "ป",
   "nameTh": "ป ปลา",
   "namePh": "pɔɔ plaa",
@@ -228,9 +269,11 @@
   "ini": "p",
   "fin": "-p",
   "lot": 2,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_th_thung",
   "ch": "ถ",
   "nameTh": "ถ ถุง",
   "namePh": "thɔ̌ɔ thǔng",
@@ -239,9 +282,11 @@
   "ini": "th",
   "fin": "-t",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_ph_phung",
   "ch": "ผ",
   "nameTh": "ผ ผึ้ง",
   "namePh": "phɔ̌ɔ phʉ̂ng",
@@ -250,9 +295,11 @@
   "ini": "ph",
   "fin": "—",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_f_faa",
   "ch": "ฝ",
   "nameTh": "ฝ ฝา",
   "namePh": "fɔ̌ɔ fǎa",
@@ -261,9 +308,11 @@
   "ini": "f",
   "fin": "—",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_f_fan",
   "ch": "ฟ",
   "nameTh": "ฟ ฟัน",
   "namePh": "fɔɔ fan",
@@ -272,9 +321,11 @@
   "ini": "f",
   "fin": "-p",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_s_soo",
   "ch": "ซ",
   "nameTh": "ซ โซ่",
   "namePh": "sɔɔ sôo",
@@ -283,9 +334,11 @@
   "ini": "s",
   "fin": "-t",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_s_saa-laa",
   "ch": "ศ",
   "nameTh": "ศ ศาลา",
   "namePh": "sɔ̌ɔ sǎa-laa",
@@ -294,9 +347,11 @@
   "ini": "s",
   "fin": "-t",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_s_ruu-sii",
   "ch": "ษ",
   "nameTh": "ษ ฤๅษี",
   "namePh": "sɔ̌ɔ rʉʉ-sǐi",
@@ -305,9 +360,11 @@
   "ini": "s",
   "fin": "-t",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_tch_ching",
   "ch": "ฉ",
   "nameTh": "ฉ ฉิ่ง",
   "namePh": "chɔ̌ɔ chìng",
@@ -316,9 +373,11 @@
   "ini": "tch",
   "fin": "—",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_y_ying",
   "ch": "ญ",
   "nameTh": "ญ หญิง",
   "namePh": "yɔɔ yǐng",
@@ -327,9 +386,11 @@
   "ini": "y",
   "fin": "-n",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": true
  },
  {
+  "id": "c_n_neen",
   "ch": "ณ",
   "nameTh": "ณ เณร",
   "namePh": "nɔɔ neen",
@@ -338,9 +399,11 @@
   "ini": "n",
   "fin": "-n",
   "lot": 3,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_th_thong",
   "ch": "ธ",
   "nameTh": "ธ ธง",
   "namePh": "thɔɔ thong",
@@ -349,9 +412,11 @@
   "ini": "th",
   "fin": "-t",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_ph_sam-phao",
   "ch": "ภ",
   "nameTh": "ภ สำเภา",
   "namePh": "phɔɔ sǎm-phao",
@@ -360,9 +425,11 @@
   "ini": "ph",
   "fin": "-p",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_th_thaan",
   "ch": "ฐ",
   "nameTh": "ฐ ฐาน",
   "namePh": "thɔ̌ɔ thǎan",
@@ -371,9 +438,11 @@
   "ini": "th",
   "fin": "-t",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_th_mon-thoo",
   "ch": "ฑ",
   "nameTh": "ฑ มณโฑ",
   "namePh": "thɔɔ mon-thoo",
@@ -382,9 +451,11 @@
   "ini": "th",
   "fin": "-t",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_th_phuu-thao",
   "ch": "ฒ",
   "nameTh": "ฒ ผู้เฒ่า",
   "namePh": "thɔɔ phûu-thâo",
@@ -393,9 +464,11 @@
   "ini": "th",
   "fin": "-t",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_d_cha-daa",
   "ch": "ฎ",
   "nameTh": "ฎ ชฎา",
   "namePh": "dɔɔ chá-daa",
@@ -404,9 +477,11 @@
   "ini": "d",
   "fin": "-t",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_t_pa-tak",
   "ch": "ฏ",
   "nameTh": "ฏ ปฏัก",
   "namePh": "tɔɔ pà-tàk",
@@ -415,9 +490,11 @@
   "ini": "t",
   "fin": "-t",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_l_tchu-laa",
   "ch": "ฬ",
   "nameTh": "ฬ จุฬา",
   "namePh": "lɔɔ tchù-laa",
@@ -426,9 +503,11 @@
   "ini": "l",
   "fin": "-n",
   "lot": 4,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_kh_ra-khang",
   "ch": "ฆ",
   "nameTh": "ฆ ระฆัง",
   "namePh": "khɔɔ rá-khang",
@@ -437,9 +516,11 @@
   "ini": "kh",
   "fin": "-k",
   "lot": 5,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_tch_cheueu",
   "ch": "ฌ",
   "nameTh": "ฌ เฌอ",
   "namePh": "chɔɔ chəə",
@@ -448,9 +529,11 @@
   "ini": "tch",
   "fin": "—",
   "lot": 5,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_h_nok-huuk",
   "ch": "ฮ",
   "nameTh": "ฮ นกฮูก",
   "namePh": "hɔɔ nók-hûuk",
@@ -459,9 +542,11 @@
   "ini": "h",
   "fin": "—",
   "lot": 5,
-  "obsolete": false
+  "obsolete": false,
+  "namable": false
  },
  {
+  "id": "c_kh_khuat",
   "ch": "ฃ",
   "nameTh": "ฃ ขวด",
   "namePh": "khɔ̌ɔ khùat",
@@ -470,9 +555,11 @@
   "ini": "kh",
   "fin": "-k",
   "lot": 5,
-  "obsolete": true
+  "obsolete": true,
+  "namable": false
  },
  {
+  "id": "c_kh_khon",
   "ch": "ฅ",
   "nameTh": "ฅ คน",
   "namePh": "khɔɔ khon",
@@ -481,6 +568,7 @@
   "ini": "kh",
   "fin": "-k",
   "lot": 5,
-  "obsolete": true
+  "obsolete": true,
+  "namable": false
  }
 ]

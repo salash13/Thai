@@ -1,0 +1,16 @@
+[
+ { "first": "ก", "second": "ร" },
+ { "first": "ก", "second": "ล" },
+ { "first": "ก", "second": "ว" },
+ { "first": "ข", "second": "ร" },
+ { "first": "ข", "second": "ล" },
+ { "first": "ข", "second": "ว" },
+ { "first": "ค", "second": "ร" },
+ { "first": "ค", "second": "ล" },
+ { "first": "ค", "second": "ว" },
+ { "first": "ต", "second": "ร" },
+ { "first": "ป", "second": "ร" },
+ { "first": "ป", "second": "ล" },
+ { "first": "พ", "second": "ร" },
+ { "first": "พ", "second": "ล" }
+]

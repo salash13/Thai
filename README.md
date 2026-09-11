@@ -21,10 +21,19 @@ Le programme complet et les décisions du projet sont dans [`docs/PROJET-THAI.md
 
 - Les 44 consonnes en 5 lots, débloqués progressivement
 - Répétition espacée : l'app redemande chaque élément juste avant l'oubli
-- Lecture de syllabes réelles, avec la règle de ton expliquée à chaque réponse
+- Lecture de syllabes — 24 voyelles (longues, courtes, composées), les 4 marques de ton, les
+  syllabes fermées (8 des 8 sons finaux, glissantes -y/-w comprises pour les voyelles où la
+  diphtongue est bien établie), ห นำ et les 14 groupes consonantiques อักษรควบแท้ (กร กล กว คร
+  คล คว ตร ปร ปล พร พล ขร ขล ขว), avec la règle de l'Annexe B appliquée et expliquée à chaque
+  réponse
 - Tracé des lettres au doigt, départ marqué sur la boucle (หัว)
 - Synthèse vocale thaïe quand l'appareil en a une
 - Progression sauvegardée localement, exportable en JSON
+
+Pas encore couvert : อ นำ (4 mots fixes — plutôt du vocabulaire que de la génération, attendra
+`content/words/`), les อักษรควบไม่แท้ (groupes où la 2e lettre est muette par exception —
+ผล, ทร… — trop irrégulier pour une règle générale), et le การันต์ (lettres muettes marquées
+par ์, du cas par cas lexical) — cf. `docs/PROJET-THAI.md` §3.2, unité 0.14.
 
 ## Ajouter du contenu
 

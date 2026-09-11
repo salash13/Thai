@@ -18,6 +18,8 @@ src/app.css           styles
 src/app.js            moteur : stockage, répétition espacée, audio, syllabes, rendu
 content/letters.json  les 44 consonnes
 content/vowels.json   les voyelles enseignées
+content/tones.json    la table des tons (Annexe B) : marques + règles par classe
+content/clusters.json les groupes consonantiques อักษรควบแท้ (§0.14) : liste fermée, sans exception
 content/lots.json     le découpage en lots
 content/glyphs.json   tracés SVG + position de la boucle (GÉNÉRÉ — ne pas éditer à la main)
 assets/fonts/         Noto Sans Thai Looped (apprentissage) + Noto Sans Thai (lecture)
