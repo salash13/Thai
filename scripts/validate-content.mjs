@@ -91,14 +91,20 @@ for (const v of vowels) {
   else if (!v.before && !v.after) err(`${id} : before et after vides — la voyelle ne s'accroche à rien`);
   if (!LONGUEURS.includes(v.length)) err(`${id} : longueur invalide « ${v.length} » (longue/courte attendu)`);
   if (typeof v.live !== 'boolean') err(`${id} : champ live manquant (vivante = true/false)`);
-  if (v.markPos && !['before', 'after'].includes(v.markPos))
-    err(`${id} : markPos invalide « ${v.markPos} » (before/after attendu, ou absent si la voyelle ne prend pas de marque)`);
+  if (v.markPos && !['before', 'after', 'mid'].includes(v.markPos))
+    err(`${id} : markPos invalide « ${v.markPos} » (before/after/mid attendu, ou absent si la voyelle ne prend pas de marque)`);
+  /* markPos "mid" : la marque de ton s'insère au milieu du bloc "after" (ex. เ-ีย : เที่ยง) —
+     afterTail porte alors la partie du bloc qui vient APRÈS la marque */
+  if (v.markPos === 'mid' && (typeof v.afterTail !== 'string' || !v.afterTail))
+    err(`${id} : markPos="mid" mais afterTail manquant ou vide`);
   if (typeof v.closable !== 'boolean') err(`${id} : champ closable manquant (peut-elle être suivie d'une consonne finale ?)`);
   if (v.closable) {
     if (typeof v.closedBefore !== 'string' || typeof v.closedAfter !== 'string')
       err(`${id} : closable=true mais closedBefore/closedAfter manquants`);
-    if (v.closedMarkPos && !['before', 'after'].includes(v.closedMarkPos))
+    if (v.closedMarkPos && !['before', 'after', 'mid'].includes(v.closedMarkPos))
       err(`${id} : closedMarkPos invalide « ${v.closedMarkPos} »`);
+    if (v.closedMarkPos === 'mid' && (typeof v.closedAfterTail !== 'string' || !v.closedAfterTail))
+      err(`${id} : closedMarkPos="mid" mais closedAfterTail manquant ou vide`);
   }
   /* glideY/glideW (§0.13) : la diphtongue toute faite d'une voyelle fermée par -y/-w — ne
      concatène pas comme les autres finales, donc doit être écrite en toutes lettres */

@@ -254,29 +254,43 @@
  {
   "form": "เ-ีย",
   "before": "เ",
-  "after": "ีย",
+  "after": "ี",
+  "afterTail": "ย",
+  "markPos": "mid",
   "sound": "ia",
   "length": "longue",
   "live": true,
-  "closable": false,
+  "closable": true,
+  "closedBefore": "เ",
+  "closedAfter": "ี",
+  "closedAfterTail": "ย",
+  "closedMarkPos": "mid",
   "name": "sara ia",
-  "note": "diphtongue « ia » — s'écrit AVANT et APRÈS la consonne"
+  "note": "diphtongue « ia » — s'écrit AVANT et APRÈS la consonne. La marque de ton s'insère au milieu du bloc ีย, entre ี et ย : เสี่ย, เที่ยง"
  },
  {
   "form": "เ-ือ",
   "before": "เ",
-  "after": "ือ",
+  "after": "ื",
+  "afterTail": "อ",
+  "markPos": "mid",
   "sound": "ʉa",
   "length": "longue",
   "live": true,
-  "closable": false,
+  "closable": true,
+  "closedBefore": "เ",
+  "closedAfter": "ื",
+  "closedAfterTail": "อ",
+  "closedMarkPos": "mid",
   "name": "sara ʉa",
-  "note": "diphtongue « ʉa » — s'écrit AVANT et APRÈS la consonne"
+  "note": "diphtongue « ʉa » — s'écrit AVANT et APRÈS la consonne. La marque de ton s'insère au milieu du bloc ือ, entre ื et อ : เนื้อ, เพื่อน"
  },
  {
   "form": "-ัว",
   "before": "",
-  "after": "ัว",
+  "after": "ั",
+  "afterTail": "ว",
+  "markPos": "mid",
   "sound": "ua",
   "length": "longue",
   "live": true,
@@ -285,7 +299,7 @@
   "closedAfter": "ว",
   "closedMarkPos": "before",
   "name": "sara ua",
-  "note": "diphtongue « oua ». Devant une finale, ั disparaît et ว seul reste : ด่วน (dùan)"
+  "note": "diphtongue « oua ». Marque de ton insérée entre ั et ว (ตั๋ว). Devant une finale, ั disparaît et ว seul reste : ด่วน (dùan)"
  },
  {
   "form": "ไ-",

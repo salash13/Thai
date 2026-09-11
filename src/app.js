@@ -194,7 +194,16 @@ function writeSyl(onsetCh, vowel, mark, finalLetter) {
   const before = closed ? vowel.closedBefore : vowel.before;
   const after = closed ? vowel.closedAfter : vowel.after;
   const markPos = closed ? vowel.closedMarkPos : vowel.markPos;
-  const body = markPos === 'after' ? before + onsetCh + after + mark : before + onsetCh + mark + after;
+  let body;
+  if (markPos === 'mid') {
+    // la marque s'insère AU MILIEU du bloc "after" (ex. เ-ีย : เที่ยง, pas เที่ยง avec la marque après ย)
+    const tail = (closed ? vowel.closedAfterTail : vowel.afterTail) || '';
+    body = before + onsetCh + after + mark + tail;
+  } else if (markPos === 'after') {
+    body = before + onsetCh + after + mark;
+  } else {
+    body = before + onsetCh + mark + after;
+  }
   return body + (finalLetter ? finalLetter.ch : '');
 }
 function phonOf(ini, sound, tone, finalSound) {

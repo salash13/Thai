@@ -21,11 +21,12 @@ Le programme complet et les décisions du projet sont dans [`docs/PROJET-THAI.md
 
 - Les 44 consonnes en 5 lots, débloqués progressivement
 - Répétition espacée : l'app redemande chaque élément juste avant l'oubli
-- Lecture de syllabes — 24 voyelles (longues, courtes, composées), les 4 marques de ton, les
-  syllabes fermées (8 des 8 sons finaux, glissantes -y/-w comprises pour les voyelles où la
-  diphtongue est bien établie), ห นำ et les 14 groupes consonantiques อักษรควบแท้ (กร กล กว คร
-  คล คว ตร ปร ปล พร พล ขร ขล ขว), avec la règle de l'Annexe B appliquée et expliquée à chaque
-  réponse
+- Lecture de syllabes — 24 voyelles (longues, courtes, composées), les 4 marques de ton — y
+  compris quand la marque s'insère au milieu du bloc voyelle (เ-ีย, เ-ือ, -ัว : เที่ยง, เพื่อน,
+  ตั๋ว) —, les syllabes fermées (8 des 8 sons finaux, glissantes -y/-w comprises pour les
+  voyelles où la diphtongue est bien établie ; เ-ีย et เ-ือ fermées aussi, ex. เที่ยง, เพื่อน),
+  ห นำ et les 14 groupes consonantiques อักษรควบแท้ (กร กล กว คร คล คว ตร ปร ปล พร พล ขร ขล ขว),
+  avec la règle de l'Annexe B appliquée et expliquée à chaque réponse
 - Tracé des lettres au doigt, départ marqué sur la boucle (หัว)
 - Synthèse vocale thaïe quand l'appareil en a une
 - Progression sauvegardée localement, exportable en JSON
