@@ -115,6 +115,7 @@ function newLetters() { return unlockedLetters().filter(l => !letterSeen(l.ch));
 const Audio2 = {
   voice: null,
   init() {
+    if (typeof speechSynthesis === 'undefined') { renderTtsStatus(); return; }   // ex. webview Messenger/Instagram
     const pick = () => {
       const v = speechSynthesis.getVoices().filter(v => (v.lang || '').toLowerCase().startsWith('th'));
       this.voice = v[0] || null;
@@ -653,11 +654,16 @@ if (!Storage.ok) document.getElementById('storage-warn').classList.remove('hide'
 save();
 show('accueil');
 })().catch(err => {
+  const isFile = location.protocol === 'file:';
   document.body.innerHTML = '<div style="font-family:sans-serif;max-width:640px;margin:40px auto;padding:0 20px">' +
     '<h2>Le contenu n\'a pas pu être chargé</h2>' +
-    '<p>Cette version lit les leçons dans <code>content/*.json</code>, ce que le navigateur refuse ' +
-    'quand la page est ouverte par double-clic (protocole <code>file://</code>).</p>' +
-    '<p><b>Lance un petit serveur local :</b><br><code>cd thai-fr &amp;&amp; python3 -m http.server 8123</code><br>' +
-    'puis ouvre <a href="http://localhost:8123">http://localhost:8123</a></p>' +
+    (isFile
+      ? '<p>Cette version lit les leçons dans <code>content/*.json</code>, ce que le navigateur refuse ' +
+        'quand la page est ouverte par double-clic (protocole <code>file://</code>).</p>' +
+        '<p><b>Lance un petit serveur local :</b><br><code>cd thai-fr &amp;&amp; python3 -m http.server 8123</code><br>' +
+        'puis ouvre <a href="http://localhost:8123">http://localhost:8123</a></p>'
+      : '<p>Essaie de recharger la page. Si ça persiste, ouvre le lien dans le navigateur lui-même ' +
+        '(Chrome, Safari…) plutôt que dans l\'aperçu intégré d\'une appli comme Messenger ou Instagram — ' +
+        'ces navigateurs intégrés bloquent parfois des fonctions dont l\'app a besoin.</p>') +
     '<p style="color:#888;font-size:13px">Détail : ' + err.message + '</p></div>';
 });
