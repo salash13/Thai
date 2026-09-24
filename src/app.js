@@ -33,33 +33,74 @@ const Storage = {
   KEY: 'thaifr.v2',
   mem: null,
   ok: true,
+  rescued: null,   // clé où une progression illisible a été mise de côté (pour prévenir l'utilisateur)
   load() {
-    try {
-      const raw = localStorage.getItem(this.KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch (e) { this.ok = false; return this.mem; }
+    let raw;
+    try { raw = localStorage.getItem(this.KEY); }
+    catch (e) { this.ok = false; return this.mem; }
+    if (!raw) return null;
+    try { return JSON.parse(raw); }
+    catch (e) {
+      // Illisible : on ne l'écrase jamais sans en garder une copie.
+      this.rescued = this.KEY + '.illisible-' + Date.now();
+      try { localStorage.setItem(this.rescued, raw); } catch (e2) { this.rescued = null; }
+      return null;
+    }
   },
   save(state) {
     this.mem = state;
     try { localStorage.setItem(this.KEY, JSON.stringify(state)); }
     catch (e) { this.ok = false; }
+  },
+  backup(state) {   // copie de secours avant import ou remise à zéro
+    try { localStorage.setItem(this.KEY + '.sauvegarde', JSON.stringify(state)); } catch (e) {}
   }
 };
 
+const STATE_VERSION = 3;
 function freshState() {
-  return { v: 2, items: {}, settings: { tts: true, goal: 20 },
+  return { v: STATE_VERSION, items: {}, settings: { tts: true, goal: 20 },
            day: { date: today(), answers: 0 }, streak: { count: 0, last: null },
-           stats: { answers: 0, correct: 0 }, unlockedManually: [] };
+           stats: { answers: 0, correct: 0, syllables: 0 }, unlockedManually: [] };
 }
-function today() { return new Date().toISOString().slice(0, 10); }
+/* Jour en heure LOCALE (toISOString donnait l'heure UTC : le jour changeait à 2 h du matin en France). */
+function localDate(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+function today() { return localDate(new Date()); }
+function yesterday() { const d = new Date(); d.setDate(d.getDate() - 1); return localDate(d); }
 
-let state = Storage.load() || freshState();
-if (!state.items) state = freshState();
-if (state.day.date !== today()) {
-  const y = new Date(Date.now() - 864e5).toISOString().slice(0, 10);
-  state.streak.count = (state.streak.last === y) ? state.streak.count : 0;
+/* Remet un état (stocké ou importé) dans la forme attendue, quelle que soit sa version.
+   Lève une erreur si ce n'est manifestement pas une progression. */
+function migrate(s) {
+  if (!s || typeof s !== 'object' || !s.items || typeof s.items !== 'object' || Array.isArray(s.items))
+    throw new Error('pas une progression thaï-fr');
+  const base = freshState();
+  const out = {
+    v: STATE_VERSION,
+    items: {},
+    settings: Object.assign({}, base.settings, s.settings),
+    day: (s.day && typeof s.day.date === 'string') ? { date: s.day.date, answers: +s.day.answers || 0 } : base.day,
+    streak: { count: +(s.streak && s.streak.count) || 0, last: (s.streak && s.streak.last) || null },
+    stats: Object.assign({}, base.stats, s.stats),
+    unlockedManually: Array.isArray(s.unlockedManually) ? s.unlockedManually.filter(n => Number.isInteger(n)) : []
+  };
+  for (const [id, it] of Object.entries(s.items)) {
+    // v2 : les syllabes lues (S:…) étaient planifiées mais jamais présentées — elles deviennent un simple compteur.
+    if (id.startsWith('S:')) { out.stats.syllables++; continue; }
+    if (!isPresentable(id) || !it || typeof it !== 'object') continue;
+    out.items[id] = { ef: +it.ef || 2.5, iv: +it.iv || 0, due: +it.due || 0, reps: +it.reps || 0, lapses: +it.lapses || 0 };
+  }
+  return out;
+}
+/* Nouveau jour (au chargement, ou si l'onglet est resté ouvert après minuit). */
+function rollDay() {
+  if (state.day.date === today()) return;
+  if (state.streak.last !== yesterday() && state.streak.last !== today()) state.streak.count = 0;
   state.day = { date: today(), answers: 0 };
 }
+
+let state;   // initialisé après les constantes du moteur (section 3), dont migrate() a besoin
 function save() { Storage.save(state); }
 
 /* =======================================================================
@@ -69,13 +110,44 @@ const DAY = 864e5;
 const FACETS = ['son', 'lettre', 'classe'];
 const NEW_BATCH = 3;   // lettres nouvelles par séance
 
+{
+  const stored = Storage.load();
+  try { state = stored ? migrate(stored) : freshState(); }
+  catch (e) {
+    // Forme inattendue : on met l'original de côté avant de repartir de zéro.
+    Storage.rescued = Storage.KEY + '.illisible-' + Date.now();
+    try { localStorage.setItem(Storage.rescued, JSON.stringify(stored)); } catch (e2) { Storage.rescued = null; }
+    state = freshState();
+  }
+  rollDay();
+}
+
 function itemId(ch, facet) { return 'L:' + ch + ':' + facet; }
-function sylId(th) { return 'S:' + th; }
+/* Seules les cartes que la séance sait présenter peuvent être planifiées : une carte planifiée
+   mais jamais présentée resterait « à réviser » pour toujours et bloquerait les nouvelles lettres. */
+function isPresentable(id) {
+  const [kind, ch, facet] = id.split(':');
+  return kind === 'L' && !!byChar[ch] && FACETS.includes(facet);
+}
 function getItem(id) {
   if (!state.items[id]) state.items[id] = { ef: 2.5, iv: 0, due: 0, reps: 0, lapses: 0 };
   return state.items[id];
 }
+/* Compte une réponse pour l'objectif du jour, la série et les stats (sans rien planifier). */
+function recordAnswer(ok) {
+  rollDay();
+  state.stats.answers++; if (ok) state.stats.correct++;
+  state.day.answers++;
+  if (state.streak.last !== today()) { state.streak.count++; state.streak.last = today(); }
+}
+/* Syllabe lue : ce sont des syllabes générées au hasard, entraînement au déchiffrage, pas des cartes à mémoriser. */
+function gradeSyllable(ok) {
+  state.stats.syllables++;
+  recordAnswer(ok);
+  save();
+}
 function grade(id, ok, ms) {
+  if (!isPresentable(id)) return;
   const it = getItem(id);
   if (!ok) {
     it.lapses++; it.reps = 0; it.ef = Math.max(1.6, it.ef - 0.2); it.iv = 0.007;
@@ -88,13 +160,11 @@ function grade(id, ok, ms) {
     if (!slow) it.ef = Math.min(3.0, it.ef + 0.05);
   }
   it.due = Date.now() + it.iv * DAY;
-  state.stats.answers++; if (ok) state.stats.correct++;
-  state.day.answers++;
-  if (state.streak.last !== today()) { state.streak.count++; state.streak.last = today(); }
+  recordAnswer(ok);
   save();
 }
 function dueIds(now) {
-  return Object.keys(state.items).filter(id => state.items[id].due <= now)
+  return Object.keys(state.items).filter(id => isPresentable(id) && state.items[id].due <= now)
               .sort((a, b) => state.items[a].due - state.items[b].due);
 }
 function letterKnown(ch) { return FACETS.every(f => (state.items[itemId(ch, f)] || {}).reps >= 2); }
@@ -294,6 +364,7 @@ function svgLetter(L, o) {
 
 /* ---------- accueil ---------- */
 function renderAccueil() {
+  rollDay();
   const due = dueIds(Date.now()).length, nw = newLetters().length;
   document.getElementById('btn-review').textContent =
     due ? 'Réviser (' + due + ')' : (nw ? 'Découvrir ' + Math.min(NEW_BATCH, nw) + ' nouvelles lettres' : 'Rien à réviser — entraînement libre');
@@ -425,7 +496,7 @@ function answerSyl(choice) {
     if (b.textContent === curSyl.good) b.classList.add('good');
     else if (b.textContent === choice) b.classList.add('bad');
   });
-  grade(sylId(curSyl.th), ok, Date.now() - sylStart);
+  gradeSyllable(ok);
   Audio2.say(curSyl.th, 0.7);
   document.getElementById('syl-fb').innerHTML =
     (ok ? '<span class="g">Juste.</span> ' : '<span class="b">Non — c\'est ' + curSyl.good + '.</span> ') +
@@ -540,7 +611,7 @@ function answerQ(choice) {
       (L.fin === '—' ? 'jamais en finale' : L.fin + ' en fin') + ', classe ' + L.cls + '.';
   } else {
     const s = curQ.syl;
-    grade(sylId(s.th), ok, Date.now() - qStart);
+    gradeSyllable(ok);
     Audio2.say(s.th, 0.7);
     fb = (ok ? '<span class="g">Juste.</span> ' : '<span class="b">Non — c\'est ' + s.good + '.</span> ') +
       '<div class="rule">' + onsetLabel(s) + ' est de ' +
@@ -563,7 +634,7 @@ function renderStats() {
   const known = LETTERS.filter(l => letterKnown(l.ch)).length;
   const seen = LETTERS.filter(l => letterSeen(l.ch)).length;
   const acc = state.stats.answers ? Math.round(state.stats.correct / state.stats.answers * 100) : 0;
-  const syl = Object.keys(state.items).filter(k => k.startsWith('S:')).length;
+  const syl = state.stats.syllables;
   document.getElementById('stats').innerHTML =
     '<table>' +
     '<tr><td>Lettres sues</td><td><b>' + known + '</b> / 44</td></tr>' +
@@ -600,6 +671,7 @@ function show(name) {
   window.scrollTo(0, 0);
 }
 function renderStreak() {
+  rollDay();
   document.getElementById('streak').innerHTML = 'série <b>' + state.streak.count + '</b> j · ' +
     LETTERS.filter(l => letterKnown(l.ch)).length + '/44 lettres';
   const due = dueIds(Date.now()).length, badge = document.getElementById('due-badge');
@@ -632,7 +704,7 @@ document.addEventListener('click', e => {
       if (arg === 'export') exportData();
       if (arg === 'import') importData();
       if (arg === 'reset' && confirm('Effacer toute la progression ? Cette action est définitive.')) {
-        state = freshState(); save(); show('accueil');
+        Storage.backup(state); state = freshState(); save(); show('accueil');
       }
       break;
   }
@@ -645,11 +717,15 @@ document.getElementById('import-file').addEventListener('change', e => {
   const r = new FileReader();
   r.onload = () => {
     try {
-      const s = JSON.parse(r.result);
-      if (!s.items) throw 0;
-      state = s; save(); show('accueil');
+      const s = migrate(JSON.parse(r.result));   // valide et remet en forme AVANT de toucher à l'état actuel
+      Storage.backup(state);
+      state = s; rollDay();
+      save(); show('accueil');
       alert('Progression importée.');
-    } catch (err) { alert('Fichier illisible.'); }
+    } catch (err) {
+      alert('Ce fichier n\'est pas une progression valide. Ta progression actuelle n\'a pas été modifiée.');
+    }
+    e.target.value = '';   // permet de réimporter le même fichier
   };
   r.readAsText(f);
 });
@@ -667,6 +743,9 @@ document.addEventListener('keydown', e => {
    ======================================================================= */
 Audio2.init();
 if (!Storage.ok) document.getElementById('storage-warn').classList.remove('hide');
+if (Storage.rescued) alert('Ta progression enregistrée n\'a pas pu être lue. Elle a été mise de côté ' +
+  '(copie « ' + Storage.rescued + ' » dans ce navigateur) plutôt qu\'effacée, et l\'app repart de zéro. ' +
+  'Si tu as un export récent, importe-le depuis l\'onglet Données.');
 save();
 show('accueil');
 })().catch(err => {
